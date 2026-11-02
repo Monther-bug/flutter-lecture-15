@@ -1,0 +1,891 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lecture 18 · APIs, HTTP &amp; JSON</title>
+  <meta name="description" content="Mobile App Development with Flutter, Lecture 18: What APIs, HTTP requests and JSON are, and how to download posts from the internet with the http package and show them with FutureBuilder and ListView.builder.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Sora:wght@600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="flutter-logo" viewBox="0 0 166 210">
+    <path fill="#44D1FD" d="M10 101 100 11h56L38 129z"/>
+    <path fill="#1FBCFD" d="M51 150 100 102h56l-77 76z"/>
+    <path fill="#08589C" d="M79 178 107 150l49 49h-56z"/>
+  </symbol>
+  <symbol id="i-git" viewBox="0 0 24 24"><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><path d="M6 3v12"/><path d="M18 9a9 9 0 0 1-9 9"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><path d="M12 15V3"/></symbol>
+  <symbol id="i-windows" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></symbol>
+  <symbol id="i-laptop" viewBox="0 0 24 24"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9"/><path d="M2 19.5 4 16h16l2 3.5a1 1 0 0 1-.9 1.5H2.9a1 1 0 0 1-.9-1.5z"/></symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/><path d="M5 3v4M3 5h4M19 17v4M17 19h4"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></symbol>
+  <symbol id="i-disk" viewBox="0 0 24 24"><path d="M22 12H2"/><path d="M5.5 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.5-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.7 1.1z"/><path d="M6 16h.01M10 16h.01"/></symbol>
+  <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M5 12.6a11 11 0 0 1 14 0"/><path d="M1.4 9a16 16 0 0 1 21.2 0"/><path d="M8.5 16.1a6 6 0 0 1 7 0"/><path d="M12 20h.01"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.7 18-8-14a2 2 0 0 0-3.5 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3z"/><path d="M12 9v4M12 17h.01"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6M10 22h4"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.7-.9l-.8-1.2A2 2 0 0 0 7.9 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><polygon points="12 2 15.1 8.3 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 8.9 8.3 12 2"/></symbol>
+  <symbol id="i-package" viewBox="0 0 24 24"><path d="m7.5 4.3 9 5.1"/><path d="M21 8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.7z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 24 24"><polyline points="4 17 10 11 4 5"/><path d="M12 19h8"/></symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></symbol>
+  <symbol id="i-mouse" viewBox="0 0 24 24"><path d="m4 4 7 17 2.5-7.5L21 11z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-chrome" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M21.2 8H12M3.9 6.1 8.5 14M10.9 21.9l4.6-7.9"/></symbol>
+  <symbol id="i-cable" viewBox="0 0 24 24"><path d="M17 21v-2a1 1 0 0 1-1-1v-1a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1v2"/><path d="M19 15V6.5a3.5 3.5 0 0 0-7 0v11a3.5 3.5 0 0 1-7 0V9"/><path d="M3 9V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4z"/></symbol>
+  <symbol id="i-apple" viewBox="0 0 24 24"><path d="M12 7c-1.5-1.3-4.5-1.6-6 .5-1.6 2.3-1 6.6 1.3 9.9 1 1.4 2 2.6 3.2 2.5.9 0 1.2-.6 1.5-.6s.6.6 1.5.6c1.2.1 2.2-1.1 3.2-2.5 2.3-3.3 2.9-7.6 1.3-9.9-1.5-2.1-4.5-1.8-6-.5z"/><path d="M12 7c0-2 1-3.5 3-4"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></symbol>
+  <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 1 10-10c0 2.8-2.2 4-4 4h-2a2 2 0 0 0-1.5 3.3c.5.6.3 1.7-.5 2.2-.6.3-1.3.5-2 .5z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="12" cy="7.5" r="1"/><circle cx="16.5" cy="10.5" r="1"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></symbol>
+  <symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/></symbol>
+  <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></symbol>
+  <symbol id="i-chef-hat" viewBox="0 0 24 24"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.46.32-.84.73-1.04a4 4 0 0 0-2.13-7.59 5 5 0 0 0-9.2 0 4 4 0 0 0-2.13 7.59c.41.2.73.58.73 1.04V20a1 1 0 0 0 1 1z"/><path d="M6 17h12"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M3 20a1 1 0 0 1-1-1v-1a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1z"/><path d="M20 16a8 8 0 1 0-16 0"/><path d="M12 4v4M10 4h4"/></symbol>
+  <symbol id="i-bell-ring" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M4 2C2.8 3.7 2 5.7 2 8M22 8c0-2.3-.8-4.3-2-6"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="i-braces" viewBox="0 0 24 24"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5a2 2 0 0 0 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5a2 2 0 0 1 2-2 2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></symbol>
+  <symbol id="i-loader" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></symbol>
+  <symbol id="i-arrows" viewBox="0 0 24 24"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></symbol>
+  <symbol id="i-coffee" viewBox="0 0 24 24"><path d="M10 2v2M14 2v2M6 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/></symbol>
+</svg>
+
+<div class="progress" aria-hidden="true"><span></span></div>
+
+<main class="deck">
+
+<!-- 01 · Title -->
+<section class="slide">
+  <div class="canvas"><div class="frame frame--title">
+    <div class="stagger">
+      <p class="kicker">Lecture 18 · Mobile App Development</p>
+      <h1 class="hero">APIs 1: HTTP, JSON &amp;<br><span class="grad-text">Your First GET Request</span></h1>
+      <p class="lead lead--hero">Your app talks to the internet. Today it downloads 100 posts from a real API and shows them in a list.</p>
+      <div class="chips">
+        <span class="chip"><span class="avatar">MI</span>Eng. Monther Ibrahim</span>
+        <span class="chip"><span class="avatar">M</span>Muhammad, M.Sc.</span>
+        <span class="chip">Fall 2026</span>
+      </div>
+      <p class="keys"><kbd>→</kbd> next &nbsp;·&nbsp; <kbd>F</kbd> fullscreen &nbsp;·&nbsp; <kbd>N</kbd> notes &nbsp;·&nbsp; <kbd>T</kbd> theme</p>
+    </div>
+    <div class="title-right" aria-hidden="true">
+      <div class="logo-glow" style="left:0; top:12%;"></div>
+      <div class="net">
+        <div class="ph" style="--pw:13cqw;">
+          <div class="ph__scr" style="background:#FBF8FF;"><div class="ph__island"></div>
+            <div class="appbar" style="--ab:#FBF8FF;">Posts</div>
+            <div class="m-list"><div class="m-tile"><span class="m-cav">1</span><div><span class="m-tt">sunt aut facere repellat provident occaecati excepturi optio reprehenderit</span><span class="m-st">quia et suscipit
+suscipit recusandae consequuntur expedita et cum
+reprehenderit molestiae ut ut quas totam
+nostrum rerum est autem sunt rem eveniet architecto</span></div></div><div class="m-tile"><span class="m-cav">2</span><div><span class="m-tt">qui est esse</span><span class="m-st">est rerum tempore vitae
+sequi sint nihil reprehenderit dolor beatae ea dolores neque
+fugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis
+qui aperiam non debitis possimus qui neque nisi nulla</span></div></div><div class="m-tile"><span class="m-cav">3</span><div><span class="m-tt">ea molestias quasi exercitationem repellat qui ipsa sit aut</span><span class="m-st">et iusto sed quo iure
+voluptatem occaecati omnis eligendi aut ad
+voluptatem doloribus vel accusantium quis pariatur
+molestiae porro eius odio et labore et velit aut</span></div></div><div class="m-tile"><span class="m-cav">4</span><div><span class="m-tt">eum et est occaecati</span><span class="m-st">ullam et saepe reiciendis voluptatem adipisci
+sit amet autem assumenda provident rerum culpa
+quis hic commodi nesciunt rem tenetur doloremque ipsam iure
+quis sunt voluptatem rerum illo velit</span></div></div><div class="m-tile"><span class="m-cav">5</span><div><span class="m-tt">nesciunt quas odio</span><span class="m-st">repudiandae veniam quaerat sunt sed
+alias aut fugiat sit autem sed est
+voluptatem omnis possimus esse voluptatibus quis
+est aut tenetur dolor neque</span></div></div></div>
+          </div>
+        </div>
+        <div class="net__mid">
+          <div class="arl">request<div class="ar"></div></div>
+          <div class="arl" style="--c:var(--ok);"><div class="ar ar--l"></div>response (JSON)</div>
+        </div>
+        <div class="net__srv">
+          <span class="cl"><svg class="ico"><use href="#i-cloud"/></svg><span>{ }</span></span>
+          <b>Server</b>
+          <small>/posts</small>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <aside class="notes"><p>Until today, every piece of data in our apps was typed by us in the code. Today the data comes from a server on the internet, and the same code works for weather, news or a shop.</p></aside>
+</section>
+
+<!-- 02 · Learning objectives -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">Today</p>
+      <h2 class="title">Learning objectives</h2>
+      <p class="lead">Until today, every piece of data in our apps was typed by us in the code. Today it comes from a <b>server on the internet</b>.</p>
+    </header>
+    <div class="body" style="grid-template-rows: 1fr auto;">
+      <div class="journey stagger">
+        <div class="stop"><div class="stop__dot"><svg class="ico"><use href="#i-globe"/></svg><span class="stop__n">1</span></div><h3>APIs &amp; HTTP</h3><p>Explain APIs, REST, requests, responses and status codes</p></div>
+        <div class="stop"><div class="stop__dot"><svg class="ico"><use href="#i-braces"/></svg><span class="stop__n">2</span></div><h3>JSON</h3><p>Read JSON and turn it into Dart maps and lists</p></div>
+        <div class="stop"><div class="stop__dot"><svg class="ico"><use href="#i-package"/></svg><span class="stop__n">3</span></div><h3>Setup</h3><p>Set up <code>http</code> and the INTERNET permission</p></div>
+        <div class="stop"><div class="stop__dot"><svg class="ico"><use href="#i-clock"/></svg><span class="stop__n">4</span></div><h3>Async</h3><p>Use <code>Future</code>, <code>async</code> and <code>await</code> without freezing the app</p></div>
+        <div class="stop"><div class="stop__dot"><svg class="ico"><use href="#i-list"/></svg><span class="stop__n">5</span></div><h3>Show it</h3><p>Download posts and show them with <code>FutureBuilder</code> + <code>ListView.builder</code></p></div>
+      </div>
+      <div class="callout callout--ok goal"><svg class="ico"><use href="#i-target"/></svg><div><b>Goal:</b> a <b>Posts</b> page that downloads 100 posts from the internet and shows them in a scrolling list, with a spinner while loading and a message if something fails.</div></div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>Read the goals aloud. We come back to this slide at the end to tick them off.</p></aside>
+</section>
+
+<!-- 03 · What is an API? -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">The big idea</p>
+      <h2 class="title">What is an API?</h2>
+    </header>
+    <div class="body" style="grid-template-rows: auto auto; align-content:start; gap:2cqw;">
+      <div class="flow">
+        <article class="card flow__box">
+          <span class="itile"><svg class="ico"><use href="#i-user"/></svg></span>
+          <h3>You</h3>
+          <p>the customer at the table</p>
+          <div class="flow__tech"><svg class="ico"><use href="#i-phone"/></svg>Your app</div>
+        </article>
+        <div class="flow__mid">
+          <div class="arl">order<div class="ar"></div><small>request</small></div>
+          <div class="arl" style="--c:var(--ok);">food<div class="ar ar--l"></div><small>response</small></div>
+        </div>
+        <article class="card card--hl flow__box">
+          <span class="itile"><svg class="ico"><use href="#i-bell"/></svg></span>
+          <h3>Waiter</h3>
+          <p>takes your order, brings the food back</p>
+          <div class="flow__tech"><svg class="ico"><use href="#i-arrows"/></svg>API</div>
+        </article>
+        <div class="flow__mid">
+          <div class="arl">order<div class="ar"></div><small>request</small></div>
+          <div class="arl" style="--c:var(--ok);">food<div class="ar ar--l"></div><small>response</small></div>
+        </div>
+        <article class="card flow__box">
+          <span class="itile"><svg class="ico"><use href="#i-chef-hat"/></svg></span>
+          <h3>Kitchen</h3>
+          <p>where the food is made</p>
+          <div class="flow__tech"><svg class="ico"><use href="#i-database"/></svg>Server + database</div>
+        </article>
+      </div>
+      <div class="explain stagger" style="grid-template-columns: 1.15fr 1fr 1fr; gap:1.4cqw; align-items:start;">
+        <div class="say" style="font-size:1.45cqw;"><p>You don't walk into the kitchen. You ask the waiter, from the <b>menu</b>.</p><p>The waiter takes your order to the kitchen and brings the food back.</p></div>
+        <div class="callout callout--info" style="font-size:1.28cqw;"><svg class="ico"><use href="#i-info"/></svg><div><b>API</b> (Application Programming Interface) = the waiter: a set of rules for asking another program for data.</div></div>
+        <div class="callout callout--ok" style="font-size:1.28cqw;"><svg class="ico"><use href="#i-book"/></svg><div>The <b>menu</b> = the API <b>documentation</b>: what you can ask for, and how.</div></div>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>Give real examples students use every day: a weather app asks a weather API, a prayer-times app asks a prayer-times API, a delivery app asks the restaurant's API. The app on the phone never touches the database directly.</p></aside>
+</section>
+
+<!-- 04 · REST -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">REST</p>
+      <h2 class="title">REST APIs: URLs are resources, methods are actions</h2>
+      <p class="lead"><b>REST API</b>: every <i>thing</i> (a <b>resource</b>: posts, users, todos) has its own URL.</p>
+    </header>
+    <div class="body" style="grid-template-rows: auto auto auto; align-content:start; gap:1.3cqw;">
+      <div class="card url">
+        <div class="url__p"><code>https://jsonplaceholder.typicode.com</code><b>base URL</b><span>the server</span></div>
+        <div class="url__p url__p--res"><code>/posts</code><b>resource</b><span>which thing</span></div>
+        <div class="url__p url__p--id"><code>/1</code><b>id</b><span>which one</span></div>
+        <div class="url__p url__p--q"><code>?_limit=5</code><b>query</b><span>extra options</span></div>
+      </div>
+      <p style="font-size:1.4cqw; margin-top:.4cqw;">The <b>method</b> says what you want to do with it:</p>
+      <table class="tbl tbl--codes" style="font-size:1.4cqw;">
+        <thead><tr><th>Method</th><th>Example</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr class="is-hl"><td><span class="pill pill--green">GET</span></td><td><code>/posts</code>, <code>/posts/1</code></td><td><b>read</b> (today)</td></tr>
+          <tr><td><span class="pill pill--blue">POST</span></td><td><code>/posts</code></td><td>create a new one</td></tr>
+          <tr><td><span class="pill pill--amber">PUT / PATCH</span></td><td><code>/posts/1</code></td><td>change it (PUT = all of it, PATCH = some fields)</td></tr>
+          <tr><td><span class="pill pill--red">DELETE</span></td><td><code>/posts/1</code></td><td>delete it</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>JSONPlaceholder is a free, fake API for practice: <code>/posts</code>, <code>/users</code>, <code>/todos</code>, <code>/comments</code>. GET is by far the most common method, and it is the only one we need today. Lecture 19 sends a POST.</p></aside>
+</section>
+
+<!-- 05 · One request, one response -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">HTTP</p>
+      <h2 class="title">One request, one response</h2>
+    </header>
+    <div class="body" style="grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap:1.6cqw 2cqw; align-content:start;">
+      <article class="card http">
+        <div class="http__top"><span class="itile"><svg class="ico"><use href="#i-send"/></svg></span><h3>Request</h3><span class="http__dir"><small>app → server</small><svg class="ico"><use href="#i-phone"/></svg><svg class="ico"><use href="#i-arrow-right"/></svg><svg class="ico"><use href="#i-server"/></svg></span></div>
+        <div class="http__row"><span class="http__k">URL<small>where</small></span><span class="http__v">https://jsonplaceholder.typicode.com/posts/1</span></div>
+        <div class="http__row"><span class="http__k">Method<small>what to do</small></span><span class="http__v"><span class="pill pill--green">GET</span></span></div>
+        <div class="http__row"><span class="http__k">Headers<small>extra info, like the language or “I send JSON”</small></span><span class="http__v is-pre">Accept-Language: ar
+Accept: application/json</span></div>
+        <div class="http__row"><span class="http__k">Body<small>data you send</small></span><span class="http__v is-empty">empty for GET</span></div>
+      </article>
+      <article class="card http">
+        <div class="http__top"><span class="itile" style="background:rgba(74,222,128,.13); color:var(--ok);"><svg class="ico"><use href="#i-download"/></svg></span><h3>Response</h3><span class="http__dir" style="color:var(--ok);"><small>server → app</small><svg class="ico"><use href="#i-server"/></svg><svg class="ico"><use href="#i-arrow-right"/></svg><svg class="ico"><use href="#i-phone"/></svg></span></div>
+        <div class="http__row"><span class="http__k">Status code<small>did it work?</small></span><span class="http__v"><span class="pill pill--green">200</span> OK</span></div>
+        <div class="http__row"><span class="http__k">Headers<small>extra info</small></span><span class="http__v">Content-Type: application/json; charset=utf-8</span></div>
+        <div class="http__row"><span class="http__k">Body<small>the data, usually JSON text</small></span><span class="http__v is-pre">{
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere…",
+  "body": "quia et suscipit…"
+}</span></div>
+      </article>
+      <div class="callout callout--info" style="grid-column: 1 / -1; font-size:1.3cqw;"><svg class="ico"><use href="#i-info"/></svg><div>One request always gets <b>one response</b>, even when something fails.</div></div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>Compare with sending a letter: the address is the URL, the stamp type is the method, notes on the envelope are headers, the letter itself is the body. The answer letter starts with a number that tells you if things went well.</p></aside>
+</section>
+
+<!-- 06 · Status codes -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">HTTP</p>
+      <h2 class="title">Status codes: did it work?</h2>
+    </header>
+    <div class="body" style="grid-template-columns: 1.45fr .55fr; gap:2cqw; align-items:start;">
+      <div class="side">
+        <table class="tbl tbl--codes" style="font-size:1.6cqw;">
+          <thead><tr><th>Code</th><th>Name</th><th>When you see it</th></tr></thead>
+          <tbody>
+            <tr><td><span class="pill pill--green">200</span></td><td><b>OK</b></td><td>GET worked, the data is in the body</td></tr>
+            <tr><td><span class="pill pill--green">201</span></td><td><b>Created</b></td><td>POST worked, something new was created</td></tr>
+            <tr><td><span class="pill pill--amber">404</span></td><td><b>Not Found</b></td><td>wrong URL or id (try <code>/posts/9999</code>)</td></tr>
+            <tr><td><span class="pill pill--red">500</span></td><td><b>Internal Server Error</b></td><td>the server crashed (not your fault)</td></tr>
+          </tbody>
+        </table>
+        <div class="callout callout--warn" style="font-size:1.3cqw;"><svg class="ico"><use href="#i-alert"/></svg><div><code>/posts/9999</code> shows <code>{}</code> in the browser. It looks harmless, but the status code is <b>404</b>. Always check the code before you use the body.</div></div>
+      </div>
+      <div class="side stagger" style="gap:1.6cqw;">
+        <div class="card stat stat--ok" style="padding:1.5cqw 1.6cqw;"><small>Success</small><b>2xx</b><span>it worked</span></div>
+        <div class="card stat stat--warn" style="padding:1.5cqw 1.6cqw;"><small>Your side</small><b>4xx</b><span>the request was wrong</span></div>
+        <div class="card stat stat--bad" style="padding:1.5cqw 1.6cqw;"><small>Server side</small><b>5xx</b><span>the server has a problem</span></div>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>Open <code>https://jsonplaceholder.typicode.com/posts/9999</code> in the browser: the page shows <code>{}</code>. It looks harmless, but the status code is 404. That is why our code always checks the code before using the body.</p></aside>
+</section>
+
+<!-- 07 · JSON -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">JSON</p>
+      <h2 class="title">JSON: the language of APIs</h2>
+      <p class="lead"><b>JSON</b> (JavaScript Object Notation): plain text that stores data. Almost every API answers in JSON.</p>
+    </header>
+    <div class="body walk">
+      <div class="term code code--lg">
+        <div class="term__bar"><i></i><i></i><i></i><span>one post · JSON</span></div>
+<pre class="hl" data-groups="1-4,6-8:g1;5:g2" style="font-size:1.42cqw;">{
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere repellat provident",
+  "tags": ["news", "libya"],
+  "isPublished": true,
+  "editor": null
+}</pre>
+      </div>
+      <div class="explain">
+        <div class="legend-groups stagger">
+          <div class="lg" style="--c:#13B9FD;"><span class="n">1</span><b><code>{ }</code> object</b><span>pairs of <code>"key": value</code></span></div>
+          <div class="lg" style="--c:#FFC857;"><span class="n">2</span><b><code>[ ]</code> array</b><span>a list of values</span></div>
+        </div>
+        <p class="mini-h">Value types</p>
+        <div class="defs stagger" style="margin-top:-.4cqw; gap:1cqw;">
+          <div class="def"><code>"..."</code><span>text</span></div>
+          <div class="def"><code>1 · 9.99</code><span>a number</span></div>
+          <div class="def"><code>true · false</code><span>yes or no</span></div>
+          <div class="def"><code>null</code><span>no value</span></div>
+          <div class="def"><code>{ } · [ ]</code><span>an object or an array (inside another one)</span></div>
+        </div>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>The first three keys are a real post from JSONPlaceholder (title shortened); <code>tags</code>, <code>isPublished</code> and <code>editor</code> are added here only to show every type. Keys are always in double quotes. The fake Latin text ("lorem ipsum") is normal for test APIs.</p></aside>
+</section>
+
+<!-- 08 · JSON in Dart -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">JSON</p>
+      <h2 class="title">JSON in Dart: <code>jsonDecode</code></h2>
+    </header>
+    <div class="body" style="grid-template-columns: 1fr auto 1.15fr; gap:1.4cqw; align-items:start;">
+      <div class="side">
+        <div class="term code code--sm code--nonum">
+          <div class="term__bar"><i></i><i></i><i></i><span>GET /posts/1</span><span class="grow"></span><span>response.body</span></div>
+<pre class="hl" data-groups="1-6:g1">{
+  "userId": 1,
+  "id": 1,
+  "title": "sunt aut facere…",
+  "body": "quia et suscipit…"
+}</pre>
+        </div>
+        <div class="term code code--sm code--nonum">
+          <div class="term__bar"><i></i><i></i><i></i><span>GET /posts</span><span class="grow"></span><span>response.body</span></div>
+<pre class="hl" data-groups="1-5:g2">[
+  { "userId": 1, "id": 1, "title": "sunt aut…" },
+  { "userId": 1, "id": 2, "title": "qui est esse" },
+  …
+]</pre>
+        </div>
+        <div class="callout callout--info"><svg class="ico"><use href="#i-info"/></svg><div><code>jsonDecode</code> turns JSON <b>text</b> into Dart maps and lists. <code>dynamic</code> = “any type”.</div></div>
+      </div>
+      <div class="arrow-mid" style="align-self:center; gap:.4cqw;"><svg class="ico"><use href="#i-arrow-right"/></svg><code style="font-size:.4em;">jsonDecode</code></div>
+      <div class="side">
+        <div class="term code code--sm">
+          <div class="term__bar"><i></i><i></i><i></i><span>Dart</span></div>
+<pre class="hl" data-groups="3-4:g1;6-7:g2">import 'dart:convert';
+
+final post = jsonDecode(response.body) as Map&lt;String, dynamic&gt;;
+debugPrint(post['title']); // read a value by its key
+
+final posts = jsonDecode(response.body) as List&lt;dynamic&gt;;
+debugPrint('${posts.length} posts'); // 100 posts</pre>
+        </div>
+        <table class="tbl tbl--half" style="font-size:1.15cqw;">
+          <thead><tr><th>JSON</th><th>Dart</th></tr></thead>
+          <tbody>
+            <tr><td style="box-shadow: inset .3cqw 0 0 #13B9FD;">object <code>{ }</code></td><td><code>Map&lt;String, dynamic&gt;</code></td></tr>
+            <tr><td style="box-shadow: inset .3cqw 0 0 #FFC857;">array <code>[ ]</code></td><td><code>List&lt;dynamic&gt;</code></td></tr>
+            <tr><td><code>"text"</code> · <code>1</code> · <code>9.99</code> · <code>true</code> · <code>null</code></td><td><code>String</code> · <code>int</code> · <code>double</code> · <code>bool</code> · <code>null</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p><code>dynamic</code> means Dart does not know the type until the app runs, so it cannot warn us about mistakes. That is fine today; in Lecture 19 we fix it with model classes. <code>as</code> tells Dart "trust me, this is a Map" (or a List).</p></aside>
+</section>
+
+<!-- 09 · Look before you code -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">Before you code</p>
+      <h2 class="title">Look before you code: open the URL in a browser</h2>
+    </header>
+    <div class="body" style="grid-template-columns: 1.05fr .95fr; gap:2.4cqw; align-items:start;">
+      <figure class="shot">
+        <div class="shot__bar"><i></i><i></i><i></i><span class="shot__url"><svg class="ico"><use href="#i-lock"/></svg>https://jsonplaceholder.typicode.com/posts</span></div>
+        <div class="shot__page">
+          <div class="shot__pp"><i><svg class="ico"><use href="#i-check"/></svg></i>Pretty-print</div>
+          <div class="shot__json">[
+  {
+    "userId": 1,
+    "id": 1,
+    "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+    "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+  },
+  {
+    "userId": 1,
+    "id": 2,
+    "title": "qui est esse",
+    "body": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
+  },
+  {
+    "userId": 1,
+    "id": 3,
+    "title": "ea molestias quasi exercitationem repellat qui ipsa sit aut",</div>
+        </div>
+      </figure>
+      <div class="side">
+        <p class="mini-h">Before writing code, answer three questions</p>
+        <ol class="steps bigsteps stagger" style="margin-top:-.3cqw;">
+          <li><span>Does it start with <code>[</code> (a <b>List</b>) or <code>{</code> (a <b>Map</b>)?</span></li>
+          <li><span>Which <b>keys</b> do I need? (<code>id</code>, <code>title</code>, <code>body</code>)</span></li>
+          <li><span>What <b>type</b> is each value? (<code>id</code> is a number, <code>title</code> is text)</span></li>
+        </ol>
+        <div class="defs stagger" style="margin-top:.6cqw;">
+          <div class="def"><code>/posts</code><span>starts with <code>[</code> → a list of 100 post maps</span></div>
+          <div class="def"><code>/posts/1</code><span>starts with <code>{</code> → one post map</span></div>
+        </div>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>Do it live: open <code>/posts</code>, <code>/posts/1</code> and <code>/users/1</code> (a map with a map inside: <code>address</code>). Most API bugs come from guessing the shape instead of looking at it for ten seconds.</p></aside>
+</section>
+
+<!-- 10 · Install http -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">Setup · 1 of 2</p>
+      <h2 class="title">Install the <code>http</code> package</h2>
+    </header>
+    <div class="body walk">
+      <div class="side">
+        <div class="term">
+          <div class="term__bar"><i></i><i></i><i></i><span>Terminal</span></div>
+          <pre style="font-size:1.3cqw;"><span class="t-p">$</span> flutter pub add http</pre>
+        </div>
+        <div class="term code code--lg">
+          <div class="term__bar"><i></i><i></i><i></i><span>pubspec.yaml</span></div>
+<pre class="hl" data-lang="yaml" data-hl="3"># pubspec.yaml (added for you)
+dependencies:
+  http: ^1.6.0</pre>
+        </div>
+        <div class="term code code--lg">
+          <div class="term__bar"><i></i><i></i><i></i><span>lib/pages/posts_page.dart</span><span class="grow"></span><span>at the top</span></div>
+<pre class="hl">import 'package:http/http.dart' as http;</pre>
+        </div>
+      </div>
+      <div class="explain stagger">
+        <article class="card" style="display:grid; grid-template-columns:auto 1fr; gap:.4cqw 1.2cqw; align-items:center;">
+          <span class="itile" style="grid-row: span 2;"><svg class="ico"><use href="#i-package"/></svg></span>
+          <h3><code>http</code> <span class="muted" style="font-weight:500;">^1.6.0</span></h3>
+          <p class="small">Sends HTTP requests (GET, POST, …) and gives you the status code, the headers and the body. Made by the Dart team.</p>
+        </article>
+        <div class="defs">
+          <div class="def"><code>as http</code><span>gives the package a short name: we write <code>http.get(...)</code>, so it is clear where <code>get</code> comes from</span></div>
+          <div class="def"><code>dart:convert</code><span>has <code>jsonDecode</code>: built into Dart, no install</span></div>
+        </div>
+        <div class="callout callout--warn"><svg class="ico"><use href="#i-alert"/></svg><div>The import is still underlined in red? Stop and re-run the app, or run <code>flutter pub get</code>.</div></div>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>Run the command in the VS Code terminal and show the new line in <code>pubspec.yaml</code>. If the editor still underlines the import in red, stop and re-run the app (or run <code>flutter pub get</code>).</p></aside>
+</section>
+
+<!-- 11 · INTERNET permission -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">Setup · 2 of 2</p>
+      <h2 class="title">Permission to use the internet</h2>
+    </header>
+    <div class="body" style="grid-template-columns: 1.12fr .88fr; gap:2.2cqw; align-items:start;">
+      <div class="side">
+        <div class="term code code--sm">
+          <div class="term__bar"><i></i><i></i><i></i><span>AndroidManifest.xml</span><span class="grow"></span><span>the main one</span></div>
+<pre class="hl" data-hl="3" style="font-size:.95cqw;">&lt;!-- android/app/src/main/AndroidManifest.xml --&gt;
+&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android"&gt;
+    &lt;uses-permission android:name="android.permission.INTERNET" /&gt;
+
+    &lt;application
+        ...</pre>
+        </div>
+        <div class="card tree tree--wide" style="font-size:1.12cqw;">
+          <div class="row"><span><span class="d">android/app/src/</span></span><span class="note"></span></div>
+          <div class="row"><span><span class="g">├─ </span><span class="f">debug/AndroidManifest.xml</span></span><span class="note">INTERNET ✓ (flutter run)</span></div>
+          <div class="row"><span><span class="g">├─ </span><span class="f">profile/AndroidManifest.xml</span></span><span class="note">INTERNET ✓</span></div>
+          <div class="row is-star"><span><span class="g">└─ </span><span class="f">main/AndroidManifest.xml</span></span><span class="note">release APK: add it here</span></div>
+        </div>
+      </div>
+      <div class="explain stagger">
+        <div class="callout callout--ok"><svg class="ico"><use href="#i-check-circle"/></svg><div><b>Android:</b> put this line in the <b>main</b> manifest, above <code>&lt;application&gt;</code>.</div></div>
+        <div class="say" style="font-size:1.3cqw;"><p><b>Why debug works without it:</b> Flutter puts INTERNET in <code>src/debug/</code> and <code>src/profile/</code> only (hot reload needs it). A <b>release</b> APK uses only <code>src/main/</code>, so without the line: no internet.</p></div>
+        <div class="callout callout--info"><svg class="ico"><use href="#i-apple"/></svg><div><b>iOS:</b> nothing to add for <code>https://</code> URLs.</div></div>
+        <div class="callout callout--info"><svg class="ico"><use href="#i-laptop"/></svg><div><b>macOS desktop only:</b> in <code>macos/Runner/DebugProfile.entitlements</code> <b>and</b> <code>Release.entitlements</code> add <code>&lt;key&gt;com.apple.security.network.client&lt;/key&gt;&lt;true/&gt;</code>.</div></div>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>Open <code>android/app/src/debug/AndroidManifest.xml</code> and read its comment ("required for development… hot reload"). Classic story: "it works on my phone with <code>flutter run</code>, but the APK I sent to my friend shows no data". Add the line once now and forget about it.</p><p>Always use <code>https://</code>: Android and iOS block plain <code>http://</code> by default.</p></aside>
+</section>
+
+<!-- 12 · Future -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">Async · 1 of 2</p>
+      <h2 class="title"><code>Future</code>: a value that comes later</h2>
+      <p class="lead">Some jobs take time: downloading, reading a file, waiting for a server. A <b>Future</b> is a promise: “I don't have the value yet, but I will.”</p>
+    </header>
+    <div class="body" style="grid-template-rows: auto auto; align-content:start; gap:1.8cqw;">
+      <div class="chain stagger">
+        <article class="card"><span class="itile"><svg class="ico"><use href="#i-user"/></svg></span><h3>1 · You order</h3><p>at the counter of the restaurant</p></article>
+        <div class="arrow-mid"><svg class="ico"><use href="#i-arrow-right"/></svg></div>
+        <article class="card card--hl"><span class="itile"><svg class="ico"><use href="#i-bell-ring"/></svg></span><h3>2 · You get a buzzer</h3><p>the <b>Future</b>. You sit down and do other things.</p></article>
+        <div class="arrow-mid"><svg class="ico"><use href="#i-arrow-right"/></svg></div>
+        <article class="card"><span class="itile" style="background:rgba(74,222,128,.13); color:var(--ok);"><svg class="ico"><use href="#i-coffee"/></svg></span><h3>3 · It buzzes</h3><p>the food is ready: now you have the <b>value</b></p></article>
+      </div>
+      <div style="display:grid; grid-template-columns: 1.1fr .9fr; gap:2.2cqw; align-items:start;">
+        <div class="term code code--lg">
+          <div class="term__bar"><i></i><i></i><i></i><span>lib/pages/future_demo_page.dart</span></div>
+<pre class="hl">// A pretend slow job: 3 seconds, then a String.
+Future&lt;String&gt; makeTea() async {
+  await Future.delayed(const Duration(seconds: 3));
+  return 'Your tea is ready';
+}</pre>
+        </div>
+        <div class="explain">
+          <div class="defs stagger">
+            <div class="def"><code>Future&lt;String&gt;</code><span>a String, later</span></div>
+            <div class="def"><code>Future&lt;List&lt;dynamic&gt;&gt;</code><span>a list, later</span></div>
+            <div class="def"><code>Future&lt;void&gt;</code><span>“done” later, no value</span></div>
+          </div>
+          <div class="callout callout--info"><svg class="ico"><use href="#i-bell-ring"/></svg><div><code>http.get(...)</code> gives us a buzzer too: a <code>Future&lt;Response&gt;</code>.</div></div>
+        </div>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>This is the students' first time with <code>Future</code>. Stay on the buzzer picture: the buzzer is not the food, it is a promise of food. <code>http.get(...)</code> also gives us a buzzer: a <code>Future&lt;Response&gt;</code>.</p></aside>
+</section>
+
+<!-- 13 · async and await -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">Async · 2 of 2</p>
+      <h2 class="title"><code>async</code> and <code>await</code>: wait without freezing</h2>
+    </header>
+    <div class="body" style="grid-template-columns: 1.3fr .7fr; grid-template-rows: auto auto; gap:1.5cqw 2.2cqw; align-content:start;">
+      <div class="term code">
+        <div class="term__bar"><i></i><i></i><i></i><span>lib/pages/future_demo_page.dart</span></div>
+<pre class="hl" data-groups="2,4:g1;3:g2;9:g3">Future&lt;void&gt; orderTea() async {
+  debugPrint('1. I ordered tea');
+  final tea = await makeTea(); // wait here, but the app keeps running
+  debugPrint('3. $tea');
+}
+
+// In the button:
+orderTea();
+debugPrint('2. Meanwhile, the app keeps working');</pre>
+      </div>
+      <div class="explain stagger">
+        <div class="defs">
+          <div class="def"><code>async</code><span>on a function = “this function may wait”. It always returns a <code>Future</code>.</span></div>
+          <div class="def"><code>await</code><span>= “pause <b>this function</b> here until the Future is done”. The rest of the app keeps running.</span></div>
+        </div>
+        <div class="term">
+          <div class="term__bar"><i></i><i></i><i></i><span>Debug Console</span></div>
+          <pre style="font-size:1.05cqw;">1. I ordered tea
+<span class="t-ok">2. Meanwhile, the app keeps working</span>
+3. Your tea is ready <span class="t-dim">(3 s later)</span></pre>
+        </div>
+      </div>
+      <div class="card tl" style="grid-column: 1 / -1;">
+        <div class="tl__row">
+          <div class="tl__name">screen<small>taps, frames, spinner</small></div>
+          <div class="tl__track">
+            <div class="tl__frames"></div>
+            <span class="tl__ev" style="--x:2%;"><span class="tl__tap"><svg class="ico"><use href="#i-mouse"/></svg></span></span>
+            <span class="tl__ev" style="--x:7%;"><span class="tl__dot" style="--c:#16A34A;">2</span></span>
+            <span class="tl__pill"><svg class="ico"><use href="#i-loader"/></svg>a new frame every 1/60 s · the spinner keeps turning</span>
+          </div>
+        </div>
+        <div class="tl__row">
+          <div class="tl__name">orderTea()<small>your function</small></div>
+          <div class="tl__track">
+            <span class="tl__ev" style="--x:4.5%;"><span class="tl__dot">1</span></span>
+            <div class="tl__wait"><span>await · waiting… 3 s</span></div>
+            <span class="tl__ev" style="--x:97%;"><span class="tl__dot">3</span></span>
+          </div>
+        </div>
+        <div class="tl__axis"><span style="--x:2%;">0 s</span><span style="--x:33.7%;">1 s</span><span style="--x:65.3%;">2 s</span><span style="--x:97%;">3 s</span></div>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>Run Demo 1: the console shows 1, 2, 3, and the spinner never stops while we wait. Without <code>async</code>/<code>await</code>, a 3-second wait would freeze the screen (no taps, no animation) and Android may show "App isn't responding".</p><p>Then remove the word <code>await</code> (and print <code>tea</code> directly): line 3 prints <code>Instance of 'Future&lt;String&gt;'</code> at once. Put it back.</p></aside>
+</section>
+
+<!-- 14 · First GET request -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">Demo · The Posts page</p>
+      <h2 class="title">Your first GET request</h2>
+    </header>
+    <div class="body walk" style="grid-template-columns: 1.2fr .8fr;">
+      <div class="term code">
+        <div class="term__bar"><i></i><i></i><i></i><span>lib/pages/posts_page.dart</span><span class="grow"></span><span>at the top</span></div>
+<pre class="hl" data-groups="2:g1;3:g2;5:g3;6:g4;8:g5">Future&lt;List&lt;dynamic&gt;&gt; fetchPosts() async {
+  final url = Uri.parse('https://jsonplaceholder.typicode.com/posts');
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body) as List&lt;dynamic&gt;;
+  } else {
+    throw Exception('Failed to load posts (${response.statusCode})');
+  }
+}</pre>
+      </div>
+      <div class="explain">
+        <div class="legend-groups stagger">
+          <div class="lg" style="--c:#13B9FD;"><span class="n">1</span><b><code>Uri.parse</code></b><span>turns the text into a URL object (<code>http.get</code> needs a <code>Uri</code>, not a <code>String</code>)</span></div>
+          <div class="lg" style="--c:#FFC857;"><span class="n">2</span><b><code>await http.get(url)</code></b><span>send the GET request and wait for the response</span></div>
+          <div class="lg" style="--c:#4ADE80;"><span class="n">3</span><b><code>statusCode == 200</code></b><span>only then use the body</span></div>
+          <div class="lg" style="--c:#C792EA;"><span class="n">4</span><b><code>jsonDecode(response.body)</code></b><span>JSON text → a Dart <code>List</code></span></div>
+          <div class="lg" style="--c:#F87171;"><span class="n">5</span><b><code>throw</code></b><span>stop and report a problem (the screen will show it)</span></div>
+        </div>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>Do Demo 2 first (one post, one button) so students see <code>response.statusCode</code> and <code>response.body</code> printed in the Debug Console. Then write <code>fetchPosts()</code> together at the top of <code>posts_page.dart</code>.</p></aside>
+</section>
+
+<!-- 15 · FutureBuilder -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">Show it · 1 of 2</p>
+      <h2 class="title"><code>FutureBuilder</code>: a widget that waits</h2>
+    </header>
+    <div class="body" style="grid-template-columns: 1fr auto; gap:2cqw; align-items:start;">
+      <div class="side">
+        <div class="term code">
+          <div class="term__bar"><i></i><i></i><i></i><span>lib/pages/posts_page.dart</span><span class="grow"></span><span>_PostsPageState</span></div>
+<pre class="hl" data-groups="4,8:g1;10-12:g2;13-15:g5">@override
+void initState() {
+  super.initState();
+  _postsFuture = fetchPosts(); // start the request once
+}
+
+body: FutureBuilder&lt;List&lt;dynamic&gt;&gt;(
+  future: _postsFuture,
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (snapshot.hasError) {
+      return Center(child: Text('Error: ${snapshot.error}'));
+    }</pre>
+        </div>
+        <div class="callout callout--info"><svg class="ico"><use href="#i-info"/></svg><div>The Future is kept in a field of the State: <code>late final Future&lt;List&lt;dynamic&gt;&gt; _postsFuture;</code></div></div>
+      </div>
+      <div class="side" style="width:36cqw;">
+        <div class="phones stagger" style="gap:1.3cqw;">
+          <div class="ph-col"><span class="badge badge--warm badge--code">waiting</span>
+            <div class="ph" style="--pw:10.8cqw;">
+              <div class="ph__scr" style="background:#FBF8FF;"><div class="ph__island"></div>
+                <div class="appbar" style="--ab:#FBF8FF;">Posts</div>
+                <div class="pbody"><div class="m-spin"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="ph-col"><span class="badge badge--bad badge--code">hasError</span>
+            <div class="ph" style="--pw:10.8cqw;">
+              <div class="ph__scr" style="background:#FBF8FF;"><div class="ph__island"></div>
+                <div class="appbar" style="--ab:#FBF8FF;">Posts</div>
+                <div class="pbody"><div class="m-error">Error: Exception: Failed to load posts (404)</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="ph-col"><span class="badge badge--ok badge--code">hasData</span>
+            <div class="ph" style="--pw:10.8cqw;">
+              <div class="ph__scr" style="background:#FBF8FF;"><div class="ph__island"></div>
+                <div class="appbar" style="--ab:#FBF8FF;">Posts</div>
+                <div class="m-list"><div class="m-tile"><span class="m-cav">1</span><div><span class="m-tt">sunt aut facere repellat provident occaecati excepturi optio reprehenderit</span><span class="m-st">quia et suscipit
+suscipit recusandae consequuntur expedita et cum
+reprehenderit molestiae ut ut quas totam
+nostrum rerum est autem sunt rem eveniet architecto</span></div></div><div class="m-tile"><span class="m-cav">2</span><div><span class="m-tt">qui est esse</span><span class="m-st">est rerum tempore vitae
+sequi sint nihil reprehenderit dolor beatae ea dolores neque
+fugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis
+qui aperiam non debitis possimus qui neque nisi nulla</span></div></div><div class="m-tile"><span class="m-cav">3</span><div><span class="m-tt">ea molestias quasi exercitationem repellat qui ipsa sit aut</span><span class="m-st">et iusto sed quo iure
+voluptatem occaecati omnis eligendi aut ad
+voluptatem doloribus vel accusantium quis pariatur
+molestiae porro eius odio et labore et velit aut</span></div></div><div class="m-tile"><span class="m-cav">4</span><div><span class="m-tt">eum et est occaecati</span><span class="m-st">ullam et saepe reiciendis voluptatem adipisci
+sit amet autem assumenda provident rerum culpa
+quis hic commodi nesciunt rem tenetur doloremque ipsam iure
+quis sunt voluptatem rerum illo velit</span></div></div><div class="m-tile"><span class="m-cav">5</span><div><span class="m-tt">nesciunt quas odio</span><span class="m-st">repudiandae veniam quaerat sunt sed
+alias aut fugiat sit autem sed est
+voluptatem omnis possimus esse voluptatibus quis
+est aut tenetur dolor neque</span></div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="defs" style="gap:.6cqw;">
+          <div class="def" style="font-size:1.18cqw;"><code>initState()</code><span>runs <b>once</b> when the page is created; <code>build()</code> runs many times</span></div>
+          <div class="def" style="font-size:1.18cqw;"><code>snapshot</code><span>a photo of the Future right now: <code>connectionState</code> <code>waiting</code> → <code>done</code> · <code>hasError</code> / <code>error</code> · <code>hasData</code> / <code>data</code></span></div>
+        </div>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p><code>FutureBuilder</code> rebuilds itself when the Future finishes, so we don't call <code>setState</code>. Never write <code>future: fetchPosts()</code> inside <code>build()</code>: every rebuild (hot reload, rotating the phone) would start a new request. <code>late</code> means "I will give it a value before I use it" (in <code>initState</code>).</p></aside>
+</section>
+
+<!-- 16 · ListView.builder -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">Show it · 2 of 2</p>
+      <h2 class="title">Show the posts with <code>ListView.builder</code></h2>
+    </header>
+    <div class="body" style="grid-template-columns: 1.35fr 1fr auto; gap:2cqw; align-items:start;">
+      <div class="term code code--sm">
+        <div class="term__bar"><i></i><i></i><i></i><span>builder: (context, snapshot) { … }</span><span class="grow"></span><span>continued</span></div>
+<pre class="hl" data-start="16" data-groups="19:g3;23:g1;25-27:g2">    if (!snapshot.hasData) {
+      return const Center(child: Text('No posts found'));
+    }
+    final posts = snapshot.data!;
+    return ListView.builder(
+      itemCount: posts.length,
+      itemBuilder: (context, index) {
+        final post = posts[index] as Map&lt;String, dynamic&gt;;
+        return ListTile(
+          leading: CircleAvatar(child: Text('${post['id']}')),
+          title: Text(post['title']),
+          subtitle: Text(post['body'], maxLines: 2),
+        );
+      },
+    );</pre>
+      </div>
+      <div class="explain">
+        <div class="legend-groups stagger">
+          <div class="lg" style="--c:#4ADE80;"><span class="n">1</span><b>The data</b><span><code>snapshot.data!</code> is the list of 100 posts</span></div>
+          <div class="lg" style="--c:#13B9FD;"><span class="n">2</span><b>Each item is a map</b><span><code>posts[index] as Map&lt;String, dynamic&gt;</code></span></div>
+          <div class="lg" style="--c:#FFC857;"><span class="n">3</span><b>Read values by key</b><span><code>post['id']</code>, <code>post['title']</code>, <code>post['body']</code></span></div>
+        </div>
+        <div class="callout callout--info"><svg class="ico"><use href="#i-list"/></svg><div>The same <code>ListView.builder</code> as Lecture 14: only the data source is new.</div></div>
+        <div class="callout callout--warn"><svg class="ico"><use href="#i-alert"/></svg><div>Try it: what happens if you type <code>post['titel']</code>?</div></div>
+      </div>
+      <div class="ph" style="--pw:12.5cqw;">
+        <div class="ph__scr" style="background:#FBF8FF;"><div class="ph__island"></div>
+          <div class="appbar" style="--ab:#FBF8FF;">Posts</div>
+          <div class="m-list"><div class="m-tile"><span class="m-cav">1</span><div><span class="m-tt">sunt aut facere repellat provident occaecati excepturi optio reprehenderit</span><span class="m-st">quia et suscipit
+suscipit recusandae consequuntur expedita et cum
+reprehenderit molestiae ut ut quas totam
+nostrum rerum est autem sunt rem eveniet architecto</span></div></div><div class="m-tile"><span class="m-cav">2</span><div><span class="m-tt">qui est esse</span><span class="m-st">est rerum tempore vitae
+sequi sint nihil reprehenderit dolor beatae ea dolores neque
+fugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis
+qui aperiam non debitis possimus qui neque nisi nulla</span></div></div><div class="m-tile"><span class="m-cav">3</span><div><span class="m-tt">ea molestias quasi exercitationem repellat qui ipsa sit aut</span><span class="m-st">et iusto sed quo iure
+voluptatem occaecati omnis eligendi aut ad
+voluptatem doloribus vel accusantium quis pariatur
+molestiae porro eius odio et labore et velit aut</span></div></div><div class="m-tile"><span class="m-cav">4</span><div><span class="m-tt">eum et est occaecati</span><span class="m-st">ullam et saepe reiciendis voluptatem adipisci
+sit amet autem assumenda provident rerum culpa
+quis hic commodi nesciunt rem tenetur doloremque ipsam iure
+quis sunt voluptatem rerum illo velit</span></div></div><div class="m-tile"><span class="m-cav">5</span><div><span class="m-tt">nesciunt quas odio</span><span class="m-st">repudiandae veniam quaerat sunt sed
+alias aut fugiat sit autem sed est
+voluptatem omnis possimus esse voluptatibus quis
+est aut tenetur dolor neque</span></div></div></div>
+        </div>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>This is the <code>ListView.builder</code> from Lecture 14; only the data source is new. <code>maxLines: 2</code> keeps each tile short.</p><p>Ask: what happens if we type <code>post['titel']</code>? (The app crashes when it runs: "type 'Null' is not a subtype of type 'String'". Lecture 19 fixes this with models.)</p></aside>
+</section>
+
+<!-- 17 · Summary + Questions -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">Wrap-up</p>
+      <h2 class="title">Summary + Questions</h2>
+    </header>
+    <div class="body wrap">
+      <article class="card card--hl">
+        <h3>Today you learned</h3>
+        <ul class="checklist stagger" style="gap:2cqw; margin-top:2cqw;">
+          <li><span>An <b>API</b> is the waiter between your app and a server; REST = URLs + methods.</span></li>
+          <li><span>Request = URL, method, headers, body. Response = <b>status code</b>, headers, body.</span></li>
+          <li><span>JSON <code>{ }</code> → <code>Map&lt;String, dynamic&gt;</code>, <code>[ ]</code> → <code>List&lt;dynamic&gt;</code>, with <code>jsonDecode</code>.</span></li>
+          <li><span><code>async</code>/<code>await</code> wait for a <code>Future</code> without freezing the app.</span></li>
+          <li><span><code>http.get</code> → check <code>statusCode</code> → <code>jsonDecode</code> → show it with <code>FutureBuilder</code>.</span></li>
+        </ul>
+      </article>
+      <div class="side">
+        <p class="mini-h">Don't forget</p>
+        <div class="callout callout--warn"><svg class="ico"><use href="#i-shield"/></svg><div>The INTERNET permission goes in the <b>main</b> manifest, or the release APK has no internet.</div></div>
+        <div class="callout callout--warn"><svg class="ico"><use href="#i-alert"/></svg><div>Start the Future in <code>initState()</code>, not with <code>future: fetchPosts()</code> inside <code>build()</code>.</div></div>
+        <div class="qa__big grad-text" style="font-size:5cqw; margin-top:1.4cqw;">Questions?</div>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>Go back to slide 2 and tick the goals. Remind students: INTERNET permission in the main manifest, and the future goes in <code>initState</code>.</p></aside>
+</section>
+
+<!-- 18 · Homework -->
+<section class="slide">
+  <div class="canvas"><div class="frame">
+    <header class="head">
+      <p class="kicker">Practice</p>
+      <h2 class="title">Homework</h2>
+    </header>
+    <div class="body" style="grid-template-columns: 1fr auto; gap:3cqw; align-items:start;">
+      <div class="side">
+        <article class="card">
+          <ol class="steps bigsteps stagger" style="font-size:1.7cqw; gap:1.8cqw;">
+            <li><span>Only 10 posts: use <code>?_limit=10</code>.</span></li>
+            <li><span>A <b>Users</b> page: name + email from <code>/users</code>.</span></li>
+            <li><span>A <b>Todos</b> page with a check icon for <code>completed</code>.</span></li>
+            <li><span>Tap a post → a <b>details page</b> with its title and body.</span></li>
+            <li><span><b>Bonus:</b> show that post's comments from <code>/posts/{id}/comments</code>.</span></li>
+          </ol>
+        </article>
+        <div class="callout callout--info"><svg class="ico"><use href="#i-search"/></svg><div>Exercises 2 and 3 are today's code with a different URL and different keys: <b>open the URL in the browser first</b>.</div></div>
+      </div>
+      <div class="ph-col">
+        <span class="badge">Exercise 2 · Users</span>
+        <div class="ph" style="--pw:12.5cqw;">
+          <div class="ph__scr" style="background:#FBF8FF;"><div class="ph__island"></div>
+            <div class="appbar" style="--ab:#FBF8FF;">Users</div>
+            <div class="m-list">
+              <div class="m-tile"><span class="m-cav">L</span><div><span class="m-tt">Leanne Graham</span><span class="m-st is-one">Sincere@april.biz</span></div></div>
+              <div class="m-tile"><span class="m-cav">E</span><div><span class="m-tt">Ervin Howell</span><span class="m-st is-one">Shanna@melissa.tv</span></div></div>
+              <div class="m-tile"><span class="m-cav">C</span><div><span class="m-tt">Clementine Bauch</span><span class="m-st is-one">Nathan@yesenia.net</span></div></div>
+              <div class="m-tile"><span class="m-cav">P</span><div><span class="m-tt">Patricia Lebsack</span><span class="m-st is-one">Julianne.OConner@kory.org</span></div></div>
+              <div class="m-tile"><span class="m-cav">C</span><div><span class="m-tt">Chelsey Dietrich</span><span class="m-st is-one">Lucio_Hettinger@annie.ca</span></div></div>
+              <div class="m-tile"><span class="m-cav">M</span><div><span class="m-tt">Mrs. Dennis Schulist</span><span class="m-st is-one">Karley_Dach@jasper.info</span></div></div>
+              <div class="m-tile"><span class="m-cav">K</span><div><span class="m-tt">Kurtis Weissnat</span><span class="m-st is-one">Telly.Hoeger@billy.biz</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+  </div></div>
+  <aside class="notes"><p>Full descriptions are in the homework section of the plan. Exercises 2 and 3 are the same code as today with a different URL and different keys: open the URL in the browser first.</p><p>Done when: 1) the last circle shows 10 · 2) 10 users, starting with Leanne Graham · 3) a mix of ticked and empty boxes (todo 4 is the first ticked one) · 4) tapping a post opens its details, back returns to the list · 5) post 1 shows 5 comments, the first from Eliseo@gardner.biz.</p></aside>
+</section>
+
+</main>
+
+<div class="notes-panel" hidden>
+  <h4 class="np-title">Speaker notes</h4>
+  <div class="np-body"></div>
+</div>
+<div class="hint" aria-hidden="true"><kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>F</kbd> fullscreen · <kbd>N</kbd> notes · <kbd>T</kbd> theme</div>
+
+<script src="js/deck.js"></script>
+</body>
+</html>
