@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lecture 18 · APIs, HTTP &amp; JSON</title>
-  <meta name="description" content="Mobile App Development with Flutter, Lecture 18: What APIs, HTTP requests and JSON are, and how to download posts from the internet with the http package and show them with FutureBuilder and ListView.builder.">
+  <title>Lecture 15 · APIs, HTTP &amp; JSON</title>
+  <meta name="description" content="Mobile App Development with Flutter, Lecture 15: What APIs, HTTP requests and JSON are, and how to download posts from the internet with the http package and show them with FutureBuilder and ListView.builder.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Sora:wght@600;700&amp;display=swap" rel="stylesheet">
@@ -89,7 +89,7 @@
 <section class="slide">
   <div class="canvas"><div class="frame frame--title">
     <div class="stagger">
-      <p class="kicker">Lecture 18 · Mobile App Development</p>
+      <p class="kicker">Lecture 15 · Mobile App Development</p>
       <h1 class="hero">APIs 1: HTTP, JSON &amp;<br><span class="grad-text">Your First GET Request</span></h1>
       <p class="lead lead--hero">Your app talks to the internet. Today it downloads 100 posts from a real API and shows them in a list.</p>
       <div class="chips">
@@ -156,7 +156,7 @@ est aut tenetur dolor neque</span></div></div></div>
       </div>
       <div class="callout callout--ok goal"><svg class="ico"><use href="#i-target"/></svg><div><b>Goal:</b> a <b>Posts</b> page that downloads 100 posts from the internet and shows them in a scrolling list, with a spinner while loading and a message if something fails.</div></div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p>Read the goals aloud. We come back to this slide at the end to tick them off.</p></aside>
 </section>
@@ -203,7 +203,7 @@ est aut tenetur dolor neque</span></div></div></div>
         <div class="callout callout--ok" style="font-size:1.28cqw;"><svg class="ico"><use href="#i-book"/></svg><div>The <b>menu</b> = the API <b>documentation</b>: what you can ask for, and how.</div></div>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p>Give real examples students use every day: a weather app asks a weather API, a prayer-times app asks a prayer-times API, a delivery app asks the restaurant's API. The app on the phone never touches the database directly.</p></aside>
 </section>
@@ -234,9 +234,9 @@ est aut tenetur dolor neque</span></div></div></div>
         </tbody>
       </table>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
-  <aside class="notes"><p>JSONPlaceholder is a free, fake API for practice: <code>/posts</code>, <code>/users</code>, <code>/todos</code>, <code>/comments</code>. GET is by far the most common method, and it is the only one we need today. Lecture 19 sends a POST.</p></aside>
+  <aside class="notes"><p>JSONPlaceholder is a free, fake API for practice: <code>/posts</code>, <code>/users</code>, <code>/todos</code>, <code>/comments</code>. GET is by far the most common method, and it is the only one we need today. Lecture 22 sends a POST.</p></aside>
 </section>
 
 <!-- 05 · One request, one response -->
@@ -268,7 +268,7 @@ Accept: application/json</span></div>
       </article>
       <div class="callout callout--info" style="grid-column: 1 / -1; font-size:1.3cqw;"><svg class="ico"><use href="#i-info"/></svg><div>One request always gets <b>one response</b>, even when something fails.</div></div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p>Compare with sending a letter: the address is the URL, the stamp type is the method, notes on the envelope are headers, the letter itself is the body. The answer letter starts with a number that tells you if things went well.</p></aside>
 </section>
@@ -299,7 +299,7 @@ Accept: application/json</span></div>
         <div class="card stat stat--bad" style="padding:1.5cqw 1.6cqw;"><small>Server side</small><b>5xx</b><span>the server has a problem</span></div>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p>Open <code>https://jsonplaceholder.typicode.com/posts/9999</code> in the browser: the page shows <code>{}</code>. It looks harmless, but the status code is 404. That is why our code always checks the code before using the body.</p></aside>
 </section>
@@ -339,7 +339,7 @@ Accept: application/json</span></div>
         </div>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p>The first three keys are a real post from JSONPlaceholder (title shortened); <code>tags</code>, <code>isPublished</code> and <code>editor</code> are added here only to show every type. Keys are always in double quotes. The fake Latin text ("lorem ipsum") is normal for test APIs.</p></aside>
 </section>
@@ -394,9 +394,9 @@ debugPrint('${posts.length} posts'); // 100 posts</pre>
         </table>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
-  <aside class="notes"><p><code>dynamic</code> means Dart does not know the type until the app runs, so it cannot warn us about mistakes. That is fine today; in Lecture 19 we fix it with model classes. <code>as</code> tells Dart "trust me, this is a Map" (or a List).</p></aside>
+  <aside class="notes"><p><code>dynamic</code> means Dart does not know the type until the app runs, so it cannot warn us about mistakes. That is fine today; in Lecture 22 we fix it with model classes. <code>as</code> tells Dart "trust me, this is a Map" (or a List).</p></aside>
 </section>
 
 <!-- 09 · Look before you code -->
@@ -443,7 +443,7 @@ debugPrint('${posts.length} posts'); // 100 posts</pre>
         </div>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p>Do it live: open <code>/posts</code>, <code>/posts/1</code> and <code>/users/1</code> (a map with a map inside: <code>address</code>). Most API bugs come from guessing the shape instead of looking at it for ten seconds.</p></aside>
 </section>
@@ -485,7 +485,7 @@ dependencies:
         <div class="callout callout--warn"><svg class="ico"><use href="#i-alert"/></svg><div>The import is still underlined in red? Stop and re-run the app, or run <code>flutter pub get</code>.</div></div>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p>Run the command in the VS Code terminal and show the new line in <code>pubspec.yaml</code>. If the editor still underlines the import in red, stop and re-run the app (or run <code>flutter pub get</code>).</p></aside>
 </section>
@@ -522,7 +522,7 @@ dependencies:
         <div class="callout callout--info"><svg class="ico"><use href="#i-laptop"/></svg><div><b>macOS desktop only:</b> in <code>macos/Runner/DebugProfile.entitlements</code> <b>and</b> <code>Release.entitlements</code> add <code>&lt;key&gt;com.apple.security.network.client&lt;/key&gt;&lt;true/&gt;</code>.</div></div>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p>Open <code>android/app/src/debug/AndroidManifest.xml</code> and read its comment ("required for development… hot reload"). Classic story: "it works on my phone with <code>flutter run</code>, but the APK I sent to my friend shows no data". Add the line once now and forget about it.</p><p>Always use <code>https://</code>: Android and iOS block plain <code>http://</code> by default.</p></aside>
 </section>
@@ -562,7 +562,7 @@ Future&lt;String&gt; makeTea() async {
         </div>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p>This is the students' first time with <code>Future</code>. Stay on the buzzer picture: the buzzer is not the food, it is a promise of food. <code>http.get(...)</code> also gives us a buzzer: a <code>Future&lt;Response&gt;</code>.</p></aside>
 </section>
@@ -620,7 +620,7 @@ debugPrint('2. Meanwhile, the app keeps working');</pre>
         <div class="tl__axis"><span style="--x:2%;">0 s</span><span style="--x:33.7%;">1 s</span><span style="--x:65.3%;">2 s</span><span style="--x:97%;">3 s</span></div>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p>Run Demo 1: the console shows 1, 2, 3, and the spinner never stops while we wait. Without <code>async</code>/<code>await</code>, a 3-second wait would freeze the screen (no taps, no animation) and Android may show "App isn't responding".</p><p>Then remove the word <code>await</code> (and print <code>tea</code> directly): line 3 prints <code>Instance of 'Future&lt;String&gt;'</code> at once. Put it back.</p></aside>
 </section>
@@ -656,7 +656,7 @@ debugPrint('2. Meanwhile, the app keeps working');</pre>
         </div>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p>Do Demo 2 first (one post, one button) so students see <code>response.statusCode</code> and <code>response.body</code> printed in the Debug Console. Then write <code>fetchPosts()</code> together at the top of <code>posts_page.dart</code>.</p></aside>
 </section>
@@ -738,7 +738,7 @@ est aut tenetur dolor neque</span></div></div></div>
         </div>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p><code>FutureBuilder</code> rebuilds itself when the Future finishes, so we don't call <code>setState</code>. Never write <code>future: fetchPosts()</code> inside <code>build()</code>: every rebuild (hot reload, rotating the phone) would start a new request. <code>late</code> means "I will give it a value before I use it" (in <code>initState</code>).</p></aside>
 </section>
@@ -775,7 +775,7 @@ est aut tenetur dolor neque</span></div></div></div>
           <div class="lg" style="--c:#13B9FD;"><span class="n">2</span><b>Each item is a map</b><span><code>posts[index] as Map&lt;String, dynamic&gt;</code></span></div>
           <div class="lg" style="--c:#FFC857;"><span class="n">3</span><b>Read values by key</b><span><code>post['id']</code>, <code>post['title']</code>, <code>post['body']</code></span></div>
         </div>
-        <div class="callout callout--info"><svg class="ico"><use href="#i-list"/></svg><div>The same <code>ListView.builder</code> as Lecture 14: only the data source is new.</div></div>
+        <div class="callout callout--info"><svg class="ico"><use href="#i-list"/></svg><div>The same <code>ListView.builder</code> as Lecture 12: only the data source is new.</div></div>
         <div class="callout callout--warn"><svg class="ico"><use href="#i-alert"/></svg><div>Try it: what happens if you type <code>post['titel']</code>?</div></div>
       </div>
       <div class="ph" style="--pw:12.5cqw;">
@@ -800,9 +800,9 @@ est aut tenetur dolor neque</span></div></div></div>
         </div>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
-  <aside class="notes"><p>This is the <code>ListView.builder</code> from Lecture 14; only the data source is new. <code>maxLines: 2</code> keeps each tile short.</p><p>Ask: what happens if we type <code>post['titel']</code>? (The app crashes when it runs: "type 'Null' is not a subtype of type 'String'". Lecture 19 fixes this with models.)</p></aside>
+  <aside class="notes"><p>This is the <code>ListView.builder</code> from Lecture 12; only the data source is new. <code>maxLines: 2</code> keeps each tile short.</p><p>Ask: what happens if we type <code>post['titel']</code>? (The app crashes when it runs: "type 'Null' is not a subtype of type 'String'". Lecture 22 fixes this with models.)</p></aside>
 </section>
 
 <!-- 17 · Summary + Questions -->
@@ -830,7 +830,7 @@ est aut tenetur dolor neque</span></div></div></div>
         <div class="qa__big grad-text" style="font-size:5cqw; margin-top:1.4cqw;">Questions?</div>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p>Go back to slide 2 and tick the goals. Remind students: INTERNET permission in the main manifest, and the future goes in <code>initState</code>.</p></aside>
 </section>
@@ -873,7 +873,7 @@ est aut tenetur dolor neque</span></div></div></div>
         </div>
       </div>
     </div>
-    <footer class="foot"><span>Mobile App Development · Lecture 18</span><span class="num"></span></footer>
+    <footer class="foot"><span>Mobile App Development · Lecture 15</span><span class="num"></span></footer>
   </div></div>
   <aside class="notes"><p>Full descriptions are in the homework section of the plan. Exercises 2 and 3 are the same code as today with a different URL and different keys: open the URL in the browser first.</p><p>Done when: 1) the last circle shows 10 · 2) 10 users, starting with Leanne Graham · 3) a mix of ticked and empty boxes (todo 4 is the first ticked one) · 4) tapping a post opens its details, back returns to the list · 5) post 1 shows 5 comments, the first from Eliseo@gardner.biz.</p></aside>
 </section>
